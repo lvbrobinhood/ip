@@ -5,13 +5,24 @@ public class Batman {
     private static int pointer = 0;
     private static final String line = "_____________________________________________________\n";
 
-    private static void addToList(String description) {
+    private static void addToList(String descr) {
         if (pointer != 100) {
-            taskList[pointer] = new Task(description);
+            if (descr.startsWith("todo") && descr.length() > 4 && (!descr.substring(4).isBlank())) {
+                taskList[pointer] = new ToDo(descr.substring(4));
+                pointer++;
+            } if (descr.startsWith("deadline") && descr.contains("/by")) {
+                taskList[pointer] = new Deadline(descr.substring(8));
+                pointer++;
+            } if (descr.startsWith("event") && descr.contains("/from") && descr.contains("/to")) {
+                taskList[pointer] = new Event(descr.substring(5));
+                pointer++;
+            }
+            /*taskList[pointer] = new Task(description);
             pointer++;
 
-            String entry = String.format("added: %s\n", description);
-            System.out.println(Batman.line + entry + Batman.line);
+            String entry = String.format("added: %s\n", description);*/
+            System.out.println(Batman.line + "Got it. I've added this task:\n" + taskList[pointer - 1]
+                    + String.format("\nNow you have %d tasks in the list\n", pointer) + Batman.line);
         }
     }
 
@@ -33,11 +44,16 @@ public class Batman {
         while (true) {
             String input = sc.nextLine();
 
+            // Exit case
             if (input.equals("bye")) {
                 System.out.println(Batman.line + "Bye. Hope to see you again soon!\n" + Batman.line);
                 break;
+
+                // List case
             } else if (input.equals("list")) {
                 Batman.printList();
+
+                // Mark task list items
             } else if (input.startsWith("mark") && input.length() >= 6) {
                 String substr = input.substring(5);
                 try {
@@ -49,6 +65,7 @@ public class Batman {
                     Batman.addToList(input);
                 }
 
+                // Unmark task list items
             } else if (input.startsWith("unmark") && input.length() >= 8) {
                 String substr = input.substring(7);
                 try {
