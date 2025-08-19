@@ -5,22 +5,50 @@ public class Batman {
     private static int pointer = 0;
     private static final String line = "_____________________________________________________\n";
 
-    private static void addToList(String descr) {
+    private static void addToList(String descr) throws NoDescriptionException, InvalidCommandException,
+            NoDeadlineException, NoFromToException {
         if (pointer != 100) {
-            if (descr.startsWith("todo") && descr.length() > 4 && (!descr.substring(4).isBlank())) {
+            if (descr.startsWith("todo")) {
+                if (descr.length() <= 4 || descr.substring(4).isBlank()) {
+                    throw new NoDescriptionException();
+                }
                 taskList[pointer] = new ToDo(descr.substring(4));
                 pointer++;
-            } if (descr.startsWith("deadline") && descr.contains("/by")) {
+
+            } else if (descr.startsWith("deadline")) {
+                String[] temp = new String[1];
+                if (descr.length() > 8) {
+                    temp = descr.substring(8).split("/by");
+                }
+                if (!descr.contains("/by") || temp.length != 2 || temp[1].isBlank()) {
+                    throw new NoDeadlineException();
+                } else if (temp[0].isBlank()) {
+                    throw new NoDescriptionException();
+                }
                 taskList[pointer] = new Deadline(descr.substring(8));
                 pointer++;
-            } if (descr.startsWith("event") && descr.contains("/from") && descr.contains("/to")) {
+
+            } else if (descr.startsWith("event")) {
+                if (!descr.contains("/from") || !descr.contains("/to")) {
+                    throw new NoFromToException();
+                } else {
+                    String[] temp1 = descr.substring(5).split("/from");
+                    String[] temp2 = descr.substring(5).split("/to");
+                    if (temp1[0].isBlank()) {
+                        throw new NoDescriptionException();
+                    } else if (temp2.length != 2 || temp2[1].isBlank()) {
+                        throw new NoFromToException();
+                    } else if (temp1[1].split("/to").length != 2 || temp1[1].split("/to")[0].isBlank()) {
+                        throw new NoFromToException();
+                    }
+                }
                 taskList[pointer] = new Event(descr.substring(5));
                 pointer++;
-            }
-            /*taskList[pointer] = new Task(description);
-            pointer++;
 
-            String entry = String.format("added: %s\n", description);*/
+            } else {
+                throw new InvalidCommandException();
+            }
+
             System.out.println(Batman.line + "Got it. I've added this task:\n" + taskList[pointer - 1]
                     + String.format("\nNow you have %d tasks in the list\n", pointer) + Batman.line);
         }
@@ -62,7 +90,6 @@ public class Batman {
                         taskList[index].mark();
                     }
                 } catch (NumberFormatException e) {
-                    Batman.addToList(input);
                 }
 
                 // Unmark task list items
@@ -74,11 +101,14 @@ public class Batman {
                         taskList[index].unmark();
                     }
                 } catch (NumberFormatException e) {
-                    Batman.addToList(input);
                 }
 
             } else {
-                Batman.addToList(input);
+                try {
+                    Batman.addToList(input);
+                } catch (NoDescriptionException | InvalidCommandException | NoDeadlineException | NoFromToException e) {
+                    System.out.println(e.getMessage());
+                }
             }
         }
 
