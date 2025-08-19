@@ -1,63 +1,66 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Batman {
-    private static Task[] taskList = new Task[100];
-    private static int pointer = 0;
+    private static ArrayList<Task> taskList = new ArrayList<>(100);
     private static final String line = "_____________________________________________________\n";
 
     private static void addToList(String descr) throws NoDescriptionException, InvalidCommandException,
             NoDeadlineException, NoFromToException {
-        if (pointer != 100) {
-            if (descr.startsWith("todo")) {
-                if (descr.length() <= 4 || descr.substring(4).isBlank()) {
-                    throw new NoDescriptionException();
-                }
-                taskList[pointer] = new ToDo(descr.substring(4));
-                pointer++;
-
-            } else if (descr.startsWith("deadline")) {
-                String[] temp = new String[1];
-                if (descr.length() > 8) {
-                    temp = descr.substring(8).split("/by");
-                }
-                if (!descr.contains("/by") || temp.length != 2 || temp[1].isBlank()) {
-                    throw new NoDeadlineException();
-                } else if (temp[0].isBlank()) {
-                    throw new NoDescriptionException();
-                }
-                taskList[pointer] = new Deadline(descr.substring(8));
-                pointer++;
-
-            } else if (descr.startsWith("event")) {
-                if (!descr.contains("/from") || !descr.contains("/to")) {
-                    throw new NoFromToException();
-                } else {
-                    String[] temp1 = descr.substring(5).split("/from");
-                    String[] temp2 = descr.substring(5).split("/to");
-                    if (temp1[0].isBlank()) {
-                        throw new NoDescriptionException();
-                    } else if (temp2.length != 2 || temp2[1].isBlank()) {
-                        throw new NoFromToException();
-                    } else if (temp1[1].split("/to").length != 2 || temp1[1].split("/to")[0].isBlank()) {
-                        throw new NoFromToException();
-                    }
-                }
-                taskList[pointer] = new Event(descr.substring(5));
-                pointer++;
-
-            } else {
-                throw new InvalidCommandException();
+        if (descr.startsWith("todo")) {
+            if (descr.length() <= 4 || descr.substring(4).isBlank()) {
+                throw new NoDescriptionException();
             }
+            taskList.add(new ToDo(descr.substring(4).strip()));
 
-            System.out.println(Batman.line + "Got it. I've added this task:\n" + taskList[pointer - 1]
-                    + String.format("\nNow you have %d tasks in the list\n", pointer) + Batman.line);
+        } else if (descr.startsWith("deadline")) {
+            String[] temp = new String[1];
+            if (descr.length() > 8) {
+                temp = descr.substring(8).split("/by");
+            }
+            if (!descr.contains("/by") || temp.length != 2 || temp[1].isBlank()) {
+                throw new NoDeadlineException();
+            } else if (temp[0].isBlank()) {
+                throw new NoDescriptionException();
+            }
+            taskList.add(new Deadline(descr.substring(8)));
+
+        } else if (descr.startsWith("event")) {
+            if (!descr.contains("/from") || !descr.contains("/to")) {
+                throw new NoFromToException();
+            } else {
+                String[] temp1 = descr.substring(5).split("/from");
+                String[] temp2 = descr.substring(5).split("/to");
+                if (temp1[0].isBlank()) {
+                    throw new NoDescriptionException();
+                } else if (temp2.length != 2 || temp2[1].isBlank()) {
+                    throw new NoFromToException();
+                } else if (temp1[1].split("/to").length != 2 || temp1[1].split("/to")[0].isBlank()) {
+                    throw new NoFromToException();
+                }
+            }
+            taskList.add(new Event(descr.substring(5)));
+
+        } else {
+            throw new InvalidCommandException();
         }
+
+        System.out.println(Batman.line + "Got it. I've added this task:\n" + taskList.get(taskList.size() - 1)
+                + String.format("\nNow you have %d tasks in the list\n", taskList.size()) + Batman.line);
+
+    }
+
+    private static void deleteFromList(int index) {
+        Task removed = taskList.remove(index);
+        System.out.println(Batman.line + "Noted. I've removed this task:");
+        System.out.println(removed);
+        System.out.println(String.format("Now you have %d tasks in the list.\n", taskList.size()) + Batman.line);
     }
 
     private static void printList() {
         String output = Batman.line + "Here are the tasks in your list:\n";
-        for (int i = 0; i < pointer; i++) {
-            String entry = String.format("%d. %s\n", i + 1, taskList[i].toString());
+        for (int i = 0; i < taskList.size(); i++) {
+            String entry = String.format("%d. %s\n", i + 1, taskList.get(i).toString());
             output += entry;
         }
         output += Batman.line;
@@ -86,10 +89,11 @@ public class Batman {
                 String substr = input.substring(5);
                 try {
                     int index = Integer.parseInt(substr) - 1;
-                    if (index < Batman.pointer) {
-                        taskList[index].mark();
+                    if (index < taskList.size()) {
+                        taskList.get(index).mark();
                     }
                 } catch (NumberFormatException e) {
+                    System.out.println("Error: Argument must be an integer");
                 }
 
                 // Unmark task list items
@@ -97,12 +101,24 @@ public class Batman {
                 String substr = input.substring(7);
                 try {
                     int index = Integer.parseInt(substr) - 1;
-                    if (index < Batman.pointer) {
-                        taskList[index].unmark();
+                    if (index < taskList.size()) {
+                        taskList.get(index).unmark();
                     }
                 } catch (NumberFormatException e) {
+                    System.out.println("Error: Argument must be an integer");
                 }
 
+                //delete task list items
+            } else if (input.startsWith("delete") && input.length() >= 8) {
+                String substr = input.substring(7);
+                try {
+                    int index = Integer.parseInt(substr) - 1;
+                    if (index < taskList.size()) {
+                        deleteFromList(index);
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Argument must be an integer");
+                }
             } else {
                 try {
                     Batman.addToList(input);
