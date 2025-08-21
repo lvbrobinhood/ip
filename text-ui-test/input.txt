@@ -1,6 +1,6 @@
 todo hello
-deadline /by Sunday 2359
-event /from Mon 2pm /to Tues 10am
+deadline eat /by Sunday 2359
+event school /from Mon 2pm /to Tues 10am
 mark 1
 mark 2
 unmark 1

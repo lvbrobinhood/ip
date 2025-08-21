@@ -7,42 +7,48 @@ public class Batman {
 
     private static void addToList(String descr) throws NoDescriptionException, InvalidCommandException,
             NoDeadlineException, NoFromToException {
-        if (descr.startsWith("todo")) {
-            if (descr.length() <= 4 || descr.substring(4).isBlank()) {
-                throw new NoDescriptionException();
-            }
-            taskList.add(new ToDo(descr.substring(4).strip()));
-
-        } else if (descr.startsWith("deadline")) {
-            String[] temp = new String[1];
-            if (descr.length() > 8) {
-                temp = descr.substring(8).split("/by");
-            }
-            if (!descr.contains("/by") || temp.length != 2 || temp[1].isBlank()) {
-                throw new NoDeadlineException();
-            } else if (temp[0].isBlank()) {
-                throw new NoDescriptionException();
-            }
-            taskList.add(new Deadline(descr.substring(8)));
-
-        } else if (descr.startsWith("event")) {
-            if (!descr.contains("/from") || !descr.contains("/to")) {
-                throw new NoFromToException();
-            } else {
-                String[] temp1 = descr.substring(5).split("/from");
-                String[] temp2 = descr.substring(5).split("/to");
-                if (temp1[0].isBlank()) {
-                    throw new NoDescriptionException();
-                } else if (temp2.length != 2 || temp2[1].isBlank()) {
-                    throw new NoFromToException();
-                } else if (temp1[1].split("/to").length != 2 || temp1[1].split("/to")[0].isBlank()) {
-                    throw new NoFromToException();
-                }
-            }
-            taskList.add(new Event(descr.substring(5)));
-
-        } else {
+        CommandType type = CommandType.fromString(descr);
+        if (type == null) {
             throw new InvalidCommandException();
+        }
+
+        switch (type) {
+            case TODO:
+                if (descr.length() <= 4 || descr.substring(4).isBlank()) {
+                    throw new NoDescriptionException();
+                }
+                taskList.add(new ToDo(descr.substring(4).strip()));
+                break;
+
+            case DEADLINE:
+                String[] temp = new String[1];
+                if (descr.length() > 8) {
+                    temp = descr.substring(8).split("/by");
+                }
+                if (!descr.contains("/by") || temp.length != 2 || temp[1].isBlank()) {
+                    throw new NoDeadlineException();
+                } else if (temp[0].isBlank()) {
+                    throw new NoDescriptionException();
+                }
+                taskList.add(new Deadline(descr.substring(8)));
+                break;
+
+            case EVENT:
+                if (!descr.contains("/from") || !descr.contains("/to")) {
+                    throw new NoFromToException();
+                } else {
+                    String[] temp1 = descr.substring(5).split("/from");
+                    String[] temp2 = descr.substring(5).split("/to");
+                    if (temp1[0].isBlank()) {
+                        throw new NoDescriptionException();
+                    } else if (temp2.length != 2 || temp2[1].isBlank()) {
+                        throw new NoFromToException();
+                    } else if (temp1[1].split("/to").length != 2 || temp1[1].split("/to")[0].isBlank()) {
+                        throw new NoFromToException();
+                    }
+                }
+                taskList.add(new Event(descr.substring(5)));
+                break;
         }
 
         System.out.println(Batman.line + "Got it. I've added this task:\n" + taskList.get(taskList.size() - 1)
