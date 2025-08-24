@@ -19,6 +19,7 @@ public class Batman {
     ));
     private static final String line = "_____________________________________________________\n";
 
+    // Creates a new task and adds it to taskList if it is of a correct task type
     private static void addToList(String descr) throws NoDescriptionException, InvalidCommandException,
             NoDeadlineException, NoFromToException {
         CommandType type = CommandType.fromString(descr);
