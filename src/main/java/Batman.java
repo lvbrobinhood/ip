@@ -1,8 +1,22 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 
 public class Batman {
     private static ArrayList<Task> taskList = new ArrayList<>(100);
+    private static final String FILE = "./data/tasks.csv";
+    private static final HashMap<String, CommandType> MAPPING = new HashMap<>(Map.of(
+            "T", CommandType.TODO,
+            "D", CommandType.DEADLINE,
+            "E", CommandType.EVENT
+    ));
     private static final String line = "_____________________________________________________\n";
 
     private static void addToList(String descr) throws NoDescriptionException, InvalidCommandException,
@@ -73,48 +87,106 @@ public class Batman {
         System.out.println(output);
     }
 
+    private static void saveTaskList() throws IOException {
+        File folder = new File("./data");
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        FileWriter writer = new FileWriter(new File(folder, "tasks.csv"));
+        for (int i = 0; i < taskList.size(); i++) {
+            writer.write(taskList.get(i).toCsv() + "\n");
+
+        }
+        writer.close();
+        System.out.println("File written successfully at " + folder.getAbsolutePath());
+    }
+
+    private static void loadTaskList() {
+        File f = new File(FILE);
+
+        if (!f.exists()) {
+            System.out.println("File not found");
+            return;
+        }
+
+        System.out.println("Loading previous task list history...");
+
+        try {
+            Scanner sc = new Scanner(f);
+            while (sc.hasNext()) {
+                String[] currRow = sc.nextLine().split(",");
+                currRow = Arrays.stream(currRow).map(String::strip).toArray(String[]::new);
+                CommandType currType = MAPPING.get(currRow[0]);
+
+                switch (currType) {
+                case TODO:
+                    taskList.add(new ToDo(currRow[1].equalsIgnoreCase("true"), currRow[2]));
+                    break;
+                case DEADLINE:
+                    taskList.add(new Deadline(currRow[1].equalsIgnoreCase("true"),
+                            currRow[2], currRow[3]));
+                    break;
+                case EVENT:
+                    taskList.add(new Event(currRow[1].equalsIgnoreCase("true"),
+                            currRow[2], currRow[3], currRow[4]));
+                    break;
+                }
+            }
+
+            System.out.println("Task list history successfully loaded.");
+
+        } catch (FileNotFoundException e) {
+            System.out.println("No history found. Start chatting now:");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Error: ./data/task.csv file corrupted. The file will be overwritten.");
+        }
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        System.out.println( Batman.line + "Hello! I'm Batman.\n" + "What can I do for you?\n" + Batman.line);
+        loadTaskList();
+        System.out.println(Batman.line + "Hello! I'm Batman.\n" + "What can I do for you?\n" + Batman.line);
 
         while (true) {
             String input = sc.nextLine();
 
-            // Exit case
             if (input.equals("bye")) {
+                try {
+                    saveTaskList();
+                } catch (IOException e) {
+                    System.out.println(String.format("Error: File writing was unsuccessful. %s",
+                            e.getMessage()));
+                }
+
                 System.out.println(Batman.line + "Bye. Hope to see you again soon!\n" + Batman.line);
                 break;
 
-                // List case
             } else if (input.equals("list")) {
                 Batman.printList();
 
-                // Mark task list items
             } else if (input.startsWith("mark") && input.length() >= 6) {
                 String substr = input.substring(5);
                 try {
                     int index = Integer.parseInt(substr) - 1;
-                    taskList.get(index).mark();
+                    taskList.get(index).setMarked();
                 } catch (NumberFormatException e) {
                     System.out.println("Error: Argument must be an integer");
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Error: Index to be marked exceeds length of list");
                 }
 
-                // Unmark task list items
             } else if (input.startsWith("unmark") && input.length() >= 8) {
                 String substr = input.substring(7);
                 try {
                     int index = Integer.parseInt(substr) - 1;
-                    taskList.get(index).unmark();
+                    taskList.get(index).setUnmarked();
                 } catch (NumberFormatException e) {
                     System.out.println("Error: Argument must be an integer");
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Error: Index to be unmarked exceeds length of list");
                 }
 
-                //delete task list items
             } else if (input.startsWith("delete") && input.length() >= 8) {
                 String substr = input.substring(7);
                 try {
@@ -125,6 +197,7 @@ public class Batman {
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Error: Index to delete from exceeds length of list");
                 }
+
             } else {
                 try {
                     Batman.addToList(input);

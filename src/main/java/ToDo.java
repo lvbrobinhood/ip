@@ -3,8 +3,22 @@ public class ToDo extends Task {
         super(description);
     }
 
+    public ToDo(boolean done, String description) {
+        super(done, description);
+    }
+
+    @Override
+    public String getTaskType() {
+        return "T";
+    }
+
+    @Override
+    public String toCsv() {
+        return String.format("%s, %s", this.getTaskType(),  super.toCsv());
+    }
+
     @Override
     public String toString() {
-        return "[T]" + super.toString();
+        return String.format("[%s]%s", this.getTaskType(), super.toString());
     }
 }
