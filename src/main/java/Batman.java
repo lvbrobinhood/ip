@@ -19,6 +19,7 @@ public class Batman {
     ));
     private static final String line = "_____________________________________________________\n";
 
+    //Nonsense here
     private static void addToList(String descr) throws NoDescriptionException, InvalidCommandException,
             NoDeadlineException, NoFromToException {
         CommandType type = CommandType.fromString(descr);
