@@ -1,3 +1,4 @@
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +20,7 @@ public class Batman {
     ));
     private static final String line = "_____________________________________________________\n";
 
-    // Creates a new task and adds it to taskList if it is of a correct task type
+    // Creates a new task and adds it to taskList if it is of correct task type
     private static void addToList(String descr) throws NoDescriptionException, InvalidCommandException,
             NoDeadlineException, NoFromToException {
         CommandType type = CommandType.fromString(descr);
@@ -204,6 +205,8 @@ public class Batman {
                     Batman.addToList(input);
                 } catch (NoDescriptionException | InvalidCommandException | NoDeadlineException | NoFromToException e) {
                     System.out.println(e.getMessage());
+                } catch (DateTimeParseException e) {
+                    System.out.println("Error: Please use yyyy-mm-dd format for time");
                 }
             }
         }

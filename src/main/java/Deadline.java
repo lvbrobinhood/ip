@@ -1,15 +1,23 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Deadline extends Task {
-    private final String deadline;
+    private final LocalDate deadline;
+    private DateTimeFormatter formatter;
 
     public Deadline(String description) {
         super(description.split("/by")[0].strip());
         String[] split = description.split("/by");
-        this.deadline = split[1].strip();
+        this.deadline = LocalDate.parse(split[1].strip());
     }
 
     public Deadline(boolean done, String description, String deadline) {
         super(done, description);
-        this.deadline = deadline;
+        this.deadline = LocalDate.parse(deadline);
+    }
+
+    public void setFormatter(DateTimeFormatter formatter) {
+        this.formatter = formatter;
     }
 
     @Override
@@ -24,6 +32,10 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
+        if (this.formatter != null) {
+            return String.format("[%s]%s (by: %s)", this.getTaskType(), super.toString(),
+                    this.deadline.format(this.formatter));
+        }
         return String.format("[%s]%s (by: %s)", this.getTaskType(), super.toString(), this.deadline);
     }
 }
