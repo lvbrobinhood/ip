@@ -13,42 +13,42 @@ public class Batman {
         }
 
         switch (type) {
-            case TODO:
-                if (descr.length() <= 4 || descr.substring(4).isBlank()) {
-                    throw new NoDescriptionException();
-                }
-                taskList.add(new ToDo(descr.substring(4).strip()));
-                break;
+        case TODO:
+            if (descr.length() <= 4 || descr.substring(4).isBlank()) {
+                throw new NoDescriptionException();
+            }
+            taskList.add(new ToDo(descr.substring(4).strip()));
+            break;
 
-            case DEADLINE:
-                String[] temp = new String[1];
-                if (descr.length() > 8) {
-                    temp = descr.substring(8).split("/by");
-                }
-                if (!descr.contains("/by") || temp.length != 2 || temp[1].isBlank()) {
-                    throw new NoDeadlineException();
-                } else if (temp[0].isBlank()) {
-                    throw new NoDescriptionException();
-                }
-                taskList.add(new Deadline(descr.substring(8)));
-                break;
+        case DEADLINE:
+            String[] temp = new String[1];
+            if (descr.length() > 8) {
+                temp = descr.substring(8).split("/by");
+            }
+            if (!descr.contains("/by") || temp.length != 2 || temp[1].isBlank()) {
+                throw new NoDeadlineException();
+            } else if (temp[0].isBlank()) {
+                throw new NoDescriptionException();
+            }
+            taskList.add(new Deadline(descr.substring(8)));
+            break;
 
-            case EVENT:
-                if (!descr.contains("/from") || !descr.contains("/to")) {
+        case EVENT:
+            if (!descr.contains("/from") || !descr.contains("/to")) {
+                throw new NoFromToException();
+            } else {
+                String[] temp1 = descr.substring(5).split("/from");
+                String[] temp2 = descr.substring(5).split("/to");
+                if (temp1[0].isBlank()) {
+                    throw new NoDescriptionException();
+                } else if (temp2.length != 2 || temp2[1].isBlank()) {
                     throw new NoFromToException();
-                } else {
-                    String[] temp1 = descr.substring(5).split("/from");
-                    String[] temp2 = descr.substring(5).split("/to");
-                    if (temp1[0].isBlank()) {
-                        throw new NoDescriptionException();
-                    } else if (temp2.length != 2 || temp2[1].isBlank()) {
-                        throw new NoFromToException();
-                    } else if (temp1[1].split("/to").length != 2 || temp1[1].split("/to")[0].isBlank()) {
-                        throw new NoFromToException();
-                    }
+                } else if (temp1[1].split("/to").length != 2 || temp1[1].split("/to")[0].isBlank()) {
+                    throw new NoFromToException();
                 }
-                taskList.add(new Event(descr.substring(5)));
-                break;
+            }
+            taskList.add(new Event(descr.substring(5)));
+            break;
         }
 
         System.out.println(Batman.line + "Got it. I've added this task:\n" + taskList.get(taskList.size() - 1)
@@ -95,11 +95,11 @@ public class Batman {
                 String substr = input.substring(5);
                 try {
                     int index = Integer.parseInt(substr) - 1;
-                    if (index < taskList.size()) {
-                        taskList.get(index).mark();
-                    }
+                    taskList.get(index).mark();
                 } catch (NumberFormatException e) {
                     System.out.println("Error: Argument must be an integer");
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Error: Index to be marked exceeds length of list");
                 }
 
                 // Unmark task list items
@@ -107,11 +107,11 @@ public class Batman {
                 String substr = input.substring(7);
                 try {
                     int index = Integer.parseInt(substr) - 1;
-                    if (index < taskList.size()) {
-                        taskList.get(index).unmark();
-                    }
+                    taskList.get(index).unmark();
                 } catch (NumberFormatException e) {
                     System.out.println("Error: Argument must be an integer");
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Error: Index to be unmarked exceeds length of list");
                 }
 
                 //delete task list items
@@ -119,11 +119,11 @@ public class Batman {
                 String substr = input.substring(7);
                 try {
                     int index = Integer.parseInt(substr) - 1;
-                    if (index < taskList.size()) {
-                        deleteFromList(index);
-                    }
+                    deleteFromList(index);
                 } catch (NumberFormatException e) {
                     System.out.println("Error: Argument must be an integer");
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Error: Index to delete from exceeds length of list");
                 }
             } else {
                 try {
