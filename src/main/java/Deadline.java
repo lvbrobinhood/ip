@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Deadline extends Task {
+public class Deadline extends TimedTask {
     private final LocalDate deadline;
     private DateTimeFormatter formatter;
 
@@ -16,6 +16,7 @@ public class Deadline extends Task {
         this.deadline = LocalDate.parse(deadline);
     }
 
+    @Override
     public void setFormatter(DateTimeFormatter formatter) {
         this.formatter = formatter;
     }

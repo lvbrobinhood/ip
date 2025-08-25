@@ -1,4 +1,3 @@
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +8,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+
+import java.time.format.DateTimeParseException;
+import java.time.format.DateTimeFormatter;
 
 public class Batman {
     private static ArrayList<Task> taskList = new ArrayList<>(100);
@@ -145,6 +147,17 @@ public class Batman {
         }
     }
 
+    private static void changeDateFormat(String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern.strip());
+        for (Task task: taskList) {
+            if (task instanceof TimedTask) {
+                TimedTask timedTask = (TimedTask) task;
+                timedTask.setFormatter(formatter);
+            }
+        }
+        System.out.println(line + "Date format changed successfully.\n" + line);
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         loadTaskList();
@@ -200,6 +213,9 @@ public class Batman {
                     System.out.println("Error: Index to delete from exceeds length of list");
                 }
 
+            } else if (input.startsWith("formatdate ") && input.length() >= 12) {
+                String substr = input.substring(11);
+                changeDateFormat(substr.strip());
             } else {
                 try {
                     Batman.addToList(input);

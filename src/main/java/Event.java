@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Event extends Task {
+public class Event extends TimedTask {
     private final LocalDate from;
     private final LocalDate to;
     private DateTimeFormatter formatter;
@@ -19,6 +19,7 @@ public class Event extends Task {
         this.to = LocalDate.parse(to);
     }
 
+    @Override
     public void setFormatter(DateTimeFormatter formatter) {
         this.formatter = formatter;
     }
