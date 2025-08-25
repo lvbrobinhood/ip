@@ -3,13 +3,16 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Batman {
-    private static final String FILE = "./data/tasks.csv";
+    private static final String FILE_DIRECTORY = "./data";
+    private static final String FILE_NAME = "tasks.csv";
     public static final String line = "_____________________________________________________\n";
 
     public static void main(String[] args) {
+        //String FILE = FILE_DIRECTORY + "/" + FILE_NAME;
         Scanner sc = new Scanner(System.in);
         TaskList tasks = new TaskList();
-        tasks.loadTaskList(FILE);
+        Storage storage = new Storage(FILE_DIRECTORY, FILE_NAME);
+        storage.load(tasks);
         System.out.println(Batman.line + "Hello! I'm Batman.\n" + "What can I do for you?\n" + Batman.line);
 
         while (true) {
@@ -17,7 +20,7 @@ public class Batman {
 
             if (input.equals("bye")) {
                 try {
-                    tasks.saveTaskList(FILE);
+                    storage.save(tasks);
                 } catch (IOException e) {
                     System.out.println(String.format("Error: File writing was unsuccessful. %s",
                             e.getMessage()));

@@ -1,23 +1,9 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import java.time.format.DateTimeFormatter;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+
 
 public class TaskList {
     private ArrayList<Task> tasks;
-    private static final HashMap<String, CommandType> MAPPING = new HashMap<>(Map.of(
-            "T", CommandType.TODO,
-            "D", CommandType.DEADLINE,
-            "E", CommandType.EVENT
-    ));
 
     public TaskList() {
         this.tasks = new ArrayList<>();
@@ -25,6 +11,14 @@ public class TaskList {
 
     public Task getTask(int index) {
         return tasks.get(index);
+    }
+
+    public int getSize() {
+        return tasks.size();
+    }
+
+    public void addTask(Task task) {
+        this.tasks.add(task);
     }
 
     public void addTask(String descr) throws NoDescriptionException, InvalidCommandException,
@@ -88,66 +82,6 @@ public class TaskList {
 
     public void printTaskList() {
         System.out.println(Batman.line + "Here are the tasks in your list:\n" + this + Batman.line);
-    }
-
-    public void saveTaskList(String fileName) throws IOException {
-        String FOLDER = "./data";
-        String FILE_NAME = "tasks.csv";
-
-        if (FOLDER + "/" + FILE_NAME == fileName) {
-            File folder = new File(FOLDER);
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
-
-            FileWriter writer = new FileWriter(new File(folder, FILE_NAME));
-            for (int i = 0; i < this.tasks.size(); i++) {
-                writer.write(this.tasks.get(i).toCsv() + "\n");
-            }
-            writer.close();
-            System.out.println("File written successfully at " + folder.getAbsolutePath());
-        }
-    }
-
-    public void loadTaskList(String fileName) {
-        File f = new File(fileName);
-
-        if (!f.exists()) {
-            System.out.println("File not found");
-            return;
-        }
-
-        System.out.println("Loading previous task list history...");
-
-        try {
-            Scanner sc = new Scanner(f);
-            while (sc.hasNext()) {
-                String[] currRow = sc.nextLine().split(",");
-                currRow = Arrays.stream(currRow).map(String::strip).toArray(String[]::new);
-                CommandType currType = MAPPING.get(currRow[0]);
-
-                switch (currType) {
-                case TODO:
-                    this.tasks.add(new ToDo(currRow[1].equalsIgnoreCase("true"), currRow[2]));
-                    break;
-                case DEADLINE:
-                    this.tasks.add(new Deadline(currRow[1].equalsIgnoreCase("true"),
-                            currRow[2], currRow[3]));
-                    break;
-                case EVENT:
-                    this.tasks.add(new Event(currRow[1].equalsIgnoreCase("true"),
-                            currRow[2], currRow[3], currRow[4]));
-                    break;
-                }
-            }
-
-            System.out.println("Task list history successfully loaded.");
-
-        } catch (FileNotFoundException e) {
-            System.out.println("No history found. Start chatting now:");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Error: ./data/task.csv file corrupted. The file will be overwritten.");
-        }
     }
 
     public void changeDateFormat(String pattern) {
