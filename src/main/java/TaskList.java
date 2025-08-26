@@ -21,7 +21,7 @@ public class TaskList {
         this.tasks.add(task);
     }
 
-    public void addTask(String descr) throws NoDescriptionException, InvalidCommandException,
+    /*public void addTask(String descr) throws NoDescriptionException, InvalidCommandException,
             NoDeadlineException, NoFromToException {
         CommandType type = CommandType.fromString(descr);
         if (type == null) {
@@ -70,7 +70,7 @@ public class TaskList {
         System.out.println(Batman.line + "Got it. I've added this task:\n" + this.tasks.get(this.tasks.size() - 1)
                 + String.format("\nNow you have %d tasks in the list\n", this.tasks.size()) + Batman.line);
 
-    }
+    }*/
 
     public Task deleteTask(int index) {
         Task removed = this.tasks.remove(index);

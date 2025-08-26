@@ -17,8 +17,25 @@ public class Batman {
 
         while (true) {
             String input = sc.nextLine();
+            try {
+                Command currCommand = Parser.parse(input);
+                if (currCommand == null) {
+                    throw new InvalidCommandException();
+                }
 
-            if (input.equals("bye")) {
+                currCommand.execute(storage, tasks);
+
+                if (currCommand instanceof ByeCommand) {
+                    break;
+                }
+            } catch (NoDescriptionException | InvalidCommandException | NoDeadlineException | NoFromToException e) {
+                System.out.println(e.getMessage());
+            } catch (DateTimeParseException e) {
+                System.out.println("Error: Please use yyyy-mm-dd format for time");
+            }
+
+
+            /*if (input.equals("bye")) {
                 try {
                     storage.save(tasks);
                 } catch (IOException e) {
@@ -80,7 +97,7 @@ public class Batman {
                 } catch (DateTimeParseException e) {
                     System.out.println("Error: Please use yyyy-mm-dd format for time");
                 }
-            }
+            }*/
         }
 
         sc.close();

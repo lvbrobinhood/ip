@@ -6,11 +6,10 @@ public class Event extends TimedTask {
     private final LocalDate to;
     private DateTimeFormatter formatter;
 
-    public Event(String description) {
-        super(description.split("/from")[0].strip());
-        this.to = LocalDate.parse(description.split("/to")[1].strip());
-        String temp = description.split("/from")[1].strip();
-        this.from = LocalDate.parse(temp.split("/to")[0].strip());
+    public Event(String description, String from, String to) {
+        super(description);
+        this.from = LocalDate.parse(from);
+        this.to = LocalDate.parse(to);
     }
 
     public Event(boolean done, String description, String from, String to) {

@@ -5,10 +5,9 @@ public class Deadline extends TimedTask {
     private final LocalDate deadline;
     private DateTimeFormatter formatter;
 
-    public Deadline(String description) {
-        super(description.split("/by")[0].strip());
-        String[] split = description.split("/by");
-        this.deadline = LocalDate.parse(split[1].strip());
+    public Deadline(String description, String deadline) {
+        super(description);
+        this.deadline = LocalDate.parse(deadline);
     }
 
     public Deadline(boolean done, String description, String deadline) {
