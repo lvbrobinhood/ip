@@ -1,13 +1,19 @@
 import java.io.IOException;
 
 public class ByeCommand extends Command {
+    private String message;
+
     @Override
     public void execute(Storage storage, TaskList tasks) {
         try {
-            storage.save(tasks);
+            this.message = storage.save(tasks);
         } catch (IOException e) {
-            System.out.println(String.format("Error: File writing was unsuccessful. %s",
-                    e.getMessage()));
+            this.message = String.format("Error: File writing was unsuccessful. %s", e.getMessage());
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.message;
     }
 }

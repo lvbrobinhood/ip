@@ -1,16 +1,28 @@
 public class UnmarkCommand extends Command {
+    private boolean isSuccess;
     private final int index;
+    private Task task;
 
     public UnmarkCommand(int index) {
         this.index = index;
+        this.isSuccess = false;
     }
 
     @Override
     public void execute(Storage storage, TaskList tasks) {
         if (this.index < tasks.getSize()) {
-            tasks.getTask(index).setUnmarked();
+            this.task = tasks.getTask(index);
+            this.task.setUnmarked();
+            this.isSuccess = true;
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (isSuccess) {
+            return "OK, I've marked this task as not done yet:\n" + this.task;
         } else {
-            System.out.println("Error: Index to be unmarked exceeds length of list");
+            return "Error: Index to be unmarked exceeds length of list";
         }
     }
 }

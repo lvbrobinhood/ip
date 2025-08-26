@@ -1,6 +1,7 @@
-public class DeadlineCommand extends Command {
+public class DeadlineCommand extends AddTaskCommand {
     private final String description;
     private final String deadline;
+    private TaskList tasks;
 
     public DeadlineCommand(String description, String deadline) {
         this.description = description;
@@ -9,6 +10,12 @@ public class DeadlineCommand extends Command {
 
     @Override
     public void execute(Storage storage, TaskList tasks) {
-        tasks.addTask(new Deadline(this.description, this.deadline));
+        this.tasks = tasks;
+        this.tasks.addTask(new Deadline(this.description, this.deadline));
+    }
+
+    @Override
+    public String toString() {
+        return super.getAddedTask(this.tasks);
     }
 }

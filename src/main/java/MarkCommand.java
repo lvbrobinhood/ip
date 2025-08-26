@@ -1,16 +1,28 @@
 public class MarkCommand extends Command {
+    private boolean isSuccess;
     private final int index;
+    private Task task;
 
     public MarkCommand(int index) {
         this.index = index;
+        this.isSuccess = false;
     }
 
     @Override
     public void execute(Storage storage, TaskList tasks) {
         if (this.index < tasks.getSize()) {
-            tasks.getTask(index).setMarked();
+            this.task = tasks.getTask(index);
+            this.task.setMarked();
+            this.isSuccess = true;
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (isSuccess) {
+            return "Nice! I've marked this task as done:\n" + this.task;
         } else {
-            System.out.println("Error: Index to be marked exceeds length of list");
+            return "Error: Index to be marked exceeds length of list";
         }
     }
 }

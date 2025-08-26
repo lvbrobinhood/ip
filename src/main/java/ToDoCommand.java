@@ -1,5 +1,6 @@
-public class ToDoCommand extends Command {
+public class ToDoCommand extends AddTaskCommand {
     private final String description;
+    private TaskList tasks;
 
     public ToDoCommand(String description) {
         this.description = description;
@@ -7,6 +8,12 @@ public class ToDoCommand extends Command {
 
     @Override
     public void execute(Storage storage, TaskList tasks) {
-        tasks.addTask(new ToDo(this.description));
+        this.tasks = tasks;
+        this.tasks.addTask(new ToDo(this.description));
+    }
+
+    @Override
+    public String toString() {
+        return super.getAddedTask(this.tasks);
     }
 }

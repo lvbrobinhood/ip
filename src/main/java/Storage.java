@@ -63,7 +63,7 @@ public class Storage {
         }
     }
 
-    public void save(TaskList tasks) throws IOException {
+    public String save(TaskList tasks) throws IOException {
         File folder = new File(this.directory);
         if (!folder.exists()) {
             folder.mkdirs();
@@ -74,7 +74,7 @@ public class Storage {
             writer.write(tasks.getTask(i).toCsv() + "\n");
         }
         writer.close();
-        System.out.println("File written successfully at " + folder.getAbsolutePath());
 
+        return "File written successfully at " + folder.getAbsolutePath();
     }
 }
