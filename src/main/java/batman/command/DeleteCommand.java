@@ -1,3 +1,9 @@
+package batman.command;
+
+import batman.storage.Storage;
+import batman.task.Task;
+import batman.task.TaskList;
+
 public class DeleteCommand extends Command {
     private boolean isSuccess;
     private final int index;

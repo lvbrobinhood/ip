@@ -1,3 +1,7 @@
+package batman.command;
+
+import batman.task.TaskList;
+
 public abstract class AddTaskCommand extends Command {
     public String getAddedTask(TaskList tasks) {
         return "Got it. I've added this task:\n" + tasks.getTask(tasks.getSize() - 1)

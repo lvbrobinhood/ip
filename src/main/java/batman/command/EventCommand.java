@@ -1,3 +1,9 @@
+package batman.command;
+
+import batman.storage.Storage;
+import batman.task.Event;
+import batman.task.TaskList;
+
 public class EventCommand extends AddTaskCommand {
     private final String description;
     private final String from;

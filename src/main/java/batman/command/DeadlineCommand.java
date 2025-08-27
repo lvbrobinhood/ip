@@ -1,3 +1,9 @@
+package batman.command;
+
+import batman.storage.Storage;
+import batman.task.Deadline;
+import batman.task.TaskList;
+
 public class DeadlineCommand extends AddTaskCommand {
     private final String description;
     private final String deadline;

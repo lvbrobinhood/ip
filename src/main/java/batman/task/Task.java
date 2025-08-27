@@ -1,3 +1,5 @@
+package batman.task;
+
 public abstract class Task {
     private final String description;
     private boolean isDone;

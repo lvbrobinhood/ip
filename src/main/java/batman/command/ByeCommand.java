@@ -1,3 +1,8 @@
+package batman.command;
+
+import batman.storage.Storage;
+import batman.task.TaskList;
+
 import java.io.IOException;
 
 public class ByeCommand extends Command {

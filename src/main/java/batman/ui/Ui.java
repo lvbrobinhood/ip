@@ -1,3 +1,7 @@
+package batman.ui;
+
+import batman.command.Command;
+
 public class Ui {
     public final String line = "_____________________________________________________";
 

@@ -1,3 +1,5 @@
+package batman.storage;
+
 public enum CommandType {
     TODO("todo"),
     DEADLINE("deadline"),
