@@ -19,17 +19,44 @@ import java.time.format.DateTimeParseException;
 
 import java.util.Scanner;
 
+/**
+ * The main entry point of the Batman task manager application.
+ * <p>
+ * This class initializes the task list, storage, and user interface,
+ * and manages the program flow by continuously reading user input,
+ * parsing it into commands, and executing them until termination.
+ * </p>
+ */
 public class Batman {
+    /** The list of tasks currently being managed. */
     private TaskList tasks;
+
+    /** Handles loading and saving of tasks to persistent storage. */
     private Storage storage;
+
+    /** Handles user interface operations such as displaying messages. */
     private Ui ui;
 
+    /**
+     * Creates a new {@code Batman} application with the given storage configuration.
+     *
+     * @param directory the directory path where the task file is stored
+     * @param fileName the file name of the task storage file
+     */
     public Batman(String directory, String fileName) {
         this.tasks = new TaskList();
         this.storage = new Storage(directory, fileName);
         this.ui = new Ui();
     }
 
+    /**
+     * Runs the main loop of the application.
+     * <p>
+     * Loads tasks from storage, prints a welcome message,
+     * and repeatedly reads user input until the {@code bye} command is given.
+     * Commands are parsed and executed, with errors handled gracefully.
+     * </p>
+     */
     public void run() {
         Scanner sc = new Scanner(System.in);
         storage.load(tasks);
@@ -58,6 +85,11 @@ public class Batman {
         sc.close();
     }
 
+    /**
+     * The main entry point of the program.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         new Batman("./data", "tasks.csv").run();
     }

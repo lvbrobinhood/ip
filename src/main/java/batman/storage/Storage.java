@@ -14,20 +14,48 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Handles saving and loading tasks to and from a file.
+ * <p>
+ * Tasks are stored in CSV format, where each line represents a task.
+ * This class supports {@link ToDo}, {@link Deadline}, and {@link Event} tasks.
+ * </p>
+ */
 public class Storage {
+    /** Directory path where the task file is stored. */
     private final String directory;
+
+    /** File name of the task storage file. */
     private final String fileName;
+
+    /** Mapping of task type identifiers to {@link CommandType}. */
     private static final HashMap<String, CommandType> MAPPING = new HashMap<>(Map.of(
             "T", CommandType.TODO,
             "D", CommandType.DEADLINE,
             "E", CommandType.EVENT
     ));
 
+    /**
+     * Creates a new {@code Storage} object with the given directory and file name.
+     *
+     * @param directory the directory path where the task file is stored
+     * @param fileName the file name of the task storage file
+     */
     public Storage(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
     }
 
+    /**
+     * Loads tasks from the storage file into the given {@link TaskList}.
+     * <p>
+     * If the file does not exist, no tasks are loaded. If the file is
+     * corrupted, an error message is displayed and the file will be overwritten
+     * on the next save.
+     * </p>
+     *
+     * @param tasks the task list to populate with loaded tasks
+     */
     public void load(TaskList tasks) {
         File f = new File(this.directory + "/" + this.fileName);
 
@@ -69,6 +97,17 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves the given task list to the storage file.
+     * <p>
+     * If the directory does not exist, it will be created. Each task is
+     * written in CSV format using its {@link batman.task.Task#toCsv()} method.
+     * </p>
+     *
+     * @param tasks the task list to save
+     * @return a confirmation message with the file path
+     * @throws IOException if an error occurs during file writing
+     */
     public String save(TaskList tasks) throws IOException {
         File folder = new File(this.directory);
         if (!folder.exists()) {

@@ -15,8 +15,26 @@ import batman.exception.NoDeadlineException;
 import batman.exception.NoDescriptionException;
 import batman.exception.NoFromToException;
 
+/**
+ * Parses user input and converts it into the corresponding {@link Command}.
+ * <p>
+ * This class is responsible for interpreting user commands such as
+ * {@code todo}, {@code deadline}, {@code event}, {@code mark}, etc.,
+ * and returning the appropriate {@link Command} object to be executed.
+ * </p>
+ */
 public class Parser {
-    public static Command parse(String input) throws NoDescriptionException, NoDeadlineException, NoFromToException {
+    /**
+     * Parses the given user input and returns the corresponding command.
+     *
+     * @param input the raw user input string
+     * @return the corresponding {@link Command}, or {@code null} if input is invalid
+     * @throws NoDescriptionException if a task description is missing or empty
+     * @throws NoDeadlineException if a deadline command is missing {@code /by} or a valid date
+     * @throws NoFromToException if an event command is missing {@code /from}, {@code /to}, or valid dates
+     */
+    public static Command parse(String input)
+            throws NoDescriptionException, NoDeadlineException, NoFromToException {
         String[] args = input.split(" ", 2);
         String command = args[0];
 
