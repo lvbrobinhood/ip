@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class TaskList {
     /** The list of tasks. */
-    private ArrayList<Task> tasks;
+    private final ArrayList<Task> tasks;
 
     /**
      * Creates an empty task list.
