@@ -2,11 +2,12 @@ package batman.task;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Represents a list of tasks.
  * <p>
- * Provides operations for adding, retrieving, deleting, and formatting tasks.
+ * Provides operations for adding, retrieving, deleting, filtering, and formatting tasks.
  * Tasks can be displayed in a user-friendly format or with updated date formatting
  * for all {@link TimedTask} objects.
  * </p>
@@ -20,6 +21,15 @@ public class TaskList {
      */
     public TaskList() {
         this.tasks = new ArrayList<>();
+    }
+
+    /**
+     * Creates a task list with the given tasks.
+     *
+     * @param tasks the initial list of tasks
+     */
+    public TaskList(ArrayList<Task> tasks) {
+        this.tasks = tasks;
     }
 
     /**
@@ -62,6 +72,19 @@ public class TaskList {
     }
 
     /**
+     * Returns a new task list containing only the tasks whose descriptions
+     * contain the given keyword.
+     *
+     * @param keyword the keyword to filter tasks by
+     * @return a new {@code TaskList} with tasks matching the keyword
+     */
+    public TaskList filterTasks(String keyword) {
+        return new TaskList(this.tasks.stream()
+                .filter(task -> task.hasKeyword(keyword))
+                .collect(Collectors.toCollection(ArrayList::new)));
+    }
+
+    /**
      * Changes the date formatting of all timed tasks in this list.
      *
      * @param pattern the date format pattern to apply
@@ -92,7 +115,7 @@ public class TaskList {
      */
     @Override
     public String toString() {
-        String output = "Here are the tasks in your list:\n";
+        String output = "";
         for (int i = 0; i < this.tasks.size(); i++) {
             String entry = String.format("%d. %s\n", i + 1, this.tasks.get(i).toString());
             output += entry;

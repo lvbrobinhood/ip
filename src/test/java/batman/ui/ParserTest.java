@@ -2,6 +2,7 @@ package batman.ui;
 
 import batman.command.Command;
 import batman.command.ToDoCommand;
+import batman.exception.InvalidCommandException;
 import batman.exception.NoDeadlineException;
 import batman.exception.NoDescriptionException;
 import batman.exception.NoFromToException;
@@ -14,7 +15,7 @@ class ParserTest {
 
     @Test
     void parse_validTodoCommand_returnsTodoCommand() throws NoDescriptionException, NoDeadlineException,
-            NoFromToException {
+            NoFromToException, InvalidCommandException {
         Command c = Parser.parse("todo buy milk");
         assertInstanceOf(ToDoCommand.class, c);
     }

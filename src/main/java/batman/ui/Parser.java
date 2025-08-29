@@ -5,12 +5,14 @@ import batman.command.Command;
 import batman.command.DeadlineCommand;
 import batman.command.DeleteCommand;
 import batman.command.EventCommand;
+import batman.command.FindCommand;
 import batman.command.FormatDateCommand;
 import batman.command.ListCommand;
 import batman.command.MarkCommand;
 import batman.command.ToDoCommand;
 import batman.command.UnmarkCommand;
 
+import batman.exception.InvalidCommandException;
 import batman.exception.NoDeadlineException;
 import batman.exception.NoDescriptionException;
 import batman.exception.NoFromToException;
@@ -32,9 +34,11 @@ public class Parser {
      * @throws NoDescriptionException if a task description is missing or empty
      * @throws NoDeadlineException if a deadline command is missing {@code /by} or a valid date
      * @throws NoFromToException if an event command is missing {@code /from}, {@code /to}, or valid dates
+     * @throws InvalidCommandException if a command is invalid (e.g., empty or invalid find command)
      */
     public static Command parse(String input)
-            throws NoDescriptionException, NoDeadlineException, NoFromToException {
+            throws NoDescriptionException, NoDeadlineException,
+            NoFromToException, InvalidCommandException {
         String[] args = input.split(" ", 2);
         String command = args[0];
 
@@ -81,6 +85,16 @@ public class Parser {
         case "formatdate":
             if (args.length == 2) {
                 return new FormatDateCommand(args[1]);
+            }
+            break;
+
+        case "find":
+            if (args.length == 2) {
+                if (!args[1].isBlank()) {
+                    return new FindCommand(args[1]);
+                } else {
+                    throw new InvalidCommandException();
+                }
             }
             break;
 

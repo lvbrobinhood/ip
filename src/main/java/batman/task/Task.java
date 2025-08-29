@@ -63,6 +63,16 @@ public abstract class Task {
     }
 
     /**
+     * Checks if the task description contains the given keyword.
+     *
+     * @param keyword the keyword to search for
+     * @return {@code true} if the description contains the keyword, {@code false} otherwise
+     */
+    public boolean hasKeyword(String keyword) {
+        return this.description.contains(keyword);
+    }
+
+    /**
      * Returns a CSV-formatted string representation of this task.
      * <p>
      * The format is: {@code done, description}.
