@@ -24,6 +24,10 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    public boolean hasKeyword(String keyword) {
+        return this.description.contains(keyword);
+    }
+
     public String toCsv() {
         return String.format("%b, %s", this.isDone, this.description);
     }

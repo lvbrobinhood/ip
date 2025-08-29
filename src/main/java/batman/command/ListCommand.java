@@ -13,6 +13,6 @@ public class ListCommand extends Command {
 
     @Override
     public String toString() {
-        return tasks.toString();
+        return "Here are the tasks in your list:\n" + tasks.toString();
     }
 }

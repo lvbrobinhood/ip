@@ -2,6 +2,7 @@ package batman.task;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
 public class TaskList {
@@ -9,6 +10,10 @@ public class TaskList {
 
     public TaskList() {
         this.tasks = new ArrayList<>();
+    }
+
+    public TaskList(ArrayList<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public Task getTask(int index) {
@@ -28,6 +33,12 @@ public class TaskList {
         return removed;
     }
 
+    public TaskList filterTasks(String keyword) {
+        return new TaskList(this.tasks.stream()
+                .filter(task -> task.hasKeyword(keyword))
+                .collect(Collectors.toCollection(ArrayList::new)));
+    }
+
     public void changeDateFormat(String pattern) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern.strip());
         for (Task task: this.tasks) {
@@ -40,7 +51,7 @@ public class TaskList {
 
     @Override
     public String toString() {
-        String output = "Here are the tasks in your list:\n";
+        String output = "";
         for (int i = 0; i < this.tasks.size(); i++) {
             String entry = String.format("%d. %s\n", i + 1, this.tasks.get(i).toString());
             output += entry;
