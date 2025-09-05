@@ -1,7 +1,6 @@
-T, false, eat
-D, true, sleep, 2025-08-26
-E, false, school, 2025-09-01, 2025-09-01
-D, false, study, 2025-10-31
-D, true, shower, 2025-08-26
-E, false, shower, 2025-08-26, 2025-08-27
-D, false, wake up, 2025-08-31
+T, false, fly
+D, true, homework, 2025-08-31
+E, false, school, 2025-09-01, 2025-09-30
+D, false, eat, 2025-10-31
+D, false, sleep, 2025-08-31
+D, false, eat, 2025-09-05
