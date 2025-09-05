@@ -85,6 +85,47 @@ public class Batman {
         sc.close();
     }
 
+    /*public String getResponse(String input) {
+        return "Duke heard: " + input;
+    }*/
+
+    public void initApp() {
+        storage.load(tasks);
+    }
+
+
+    public String processInput(String input) {
+        try {
+            Command currCommand = Parser.parse(input);
+            if (currCommand == null) {
+                throw new InvalidCommandException();
+            }
+
+            currCommand.execute(storage, tasks);
+
+            if (currCommand instanceof ByeCommand) {
+                return "Bye! See you soon!";
+            }
+
+            return currCommand.toString();
+
+        } catch (NoDescriptionException | InvalidCommandException |
+                 NoDeadlineException | NoFromToException e) {
+            return e.getMessage();
+        } catch (DateTimeParseException e) {
+            return "Error: Please use yyyy-mm-dd format for time";
+        }
+    }
+
+    public boolean isExitCommand(String input) {
+        try {
+            return Parser.parse(input) instanceof ByeCommand;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
     /**
      * The main entry point of the program.
      *
