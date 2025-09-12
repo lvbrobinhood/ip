@@ -71,8 +71,7 @@ public class TaskList {
      */
     public Task deleteTask(int index) {
         assert index >= 0 && index < this.tasks.size();
-        Task removed = this.tasks.remove(index);
-        return removed;
+        return this.tasks.remove(index);
     }
 
     /**
