@@ -26,6 +26,10 @@ import batman.exception.NoFromToException;
  * </p>
  */
 public class Parser {
+    private final static String MARK_COMMAND = "mark";
+    private final static String UNMARK_COMMAND = "unmark";
+    private final static String DELETE_COMMAND = "delete";
+
     /**
      * Parses the given user input and returns the corresponding command.
      *
@@ -49,38 +53,8 @@ public class Parser {
         case "list":
             return new ListCommand();
 
-        case "mark":
-            if (args.length == 2) {
-                try {
-                    int index = Integer.parseInt(args[1].strip()) - 1;
-                    return new MarkCommand(index);
-                } catch (NumberFormatException e) {
-                    System.out.println("Error: Argument must be an integer");
-                }
-            }
-            break;
-
-        case "unmark":
-            if (args.length == 2) {
-                try {
-                    int index = Integer.parseInt(args[1].strip()) - 1;
-                    return new UnmarkCommand(index);
-                } catch (NumberFormatException e) {
-                    System.out.println("Error: Argument must be an integer");
-                }
-            }
-            break;
-
-        case "delete":
-            if (args.length == 2) {
-                try {
-                    int index = Integer.parseInt(args[1].strip()) - 1;
-                    return new DeleteCommand(index);
-                } catch (NumberFormatException e) {
-                    System.out.println("Error: Argument must be an integer");
-                }
-            }
-            break;
+        case MARK_COMMAND, DELETE_COMMAND, UNMARK_COMMAND:
+            return checkValidIndex(args);
 
         case "formatdate":
             if (args.length == 2) {
@@ -117,9 +91,6 @@ public class Parser {
             }
 
         case "event":
-            String description = "";
-            String from = "";
-            String to = "";
             if (!args[1].contains(" /from ") || !args[1].contains(" /to ")) {
                 throw new NoFromToException();
             } else {
@@ -132,11 +103,33 @@ public class Parser {
                 } else if (temp1[1].split(" /to ").length != 2 || temp1[1].split(" /to ")[0].isBlank()) {
                     throw new NoFromToException();
                 }
-                description = temp1[0];
-                to = temp2[1];
-                from = temp1[1].split(" /to ")[0];
+                String description = temp1[0];
+                String to = temp2[1];
+                String from = temp1[1].split(" /to ")[0];
+                return new EventCommand(description, from, to);
             }
-            return new EventCommand(description, from, to);
+        }
+        return null;
+    }
+
+    public static Command checkValidIndex(String[] args) {
+        String commandType = args[0];
+        if (args.length == 2) {
+            try {
+                int index = Integer.parseInt(args[1].strip()) - 1;
+                switch (commandType) {
+                case MARK_COMMAND:
+                    return new MarkCommand(index);
+                case UNMARK_COMMAND:
+                    return new UnmarkCommand(index);
+                case DELETE_COMMAND:
+                    return new DeleteCommand(index);
+                default:
+                    return null;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Argument must be an integer");
+            }
         }
         return null;
     }

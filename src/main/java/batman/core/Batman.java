@@ -85,14 +85,9 @@ public class Batman {
         sc.close();
     }
 
-    /*public String getResponse(String input) {
-        return "Duke heard: " + input;
-    }*/
-
     public void initApp() {
         storage.load(tasks);
     }
-
 
     public String processInput(String input) {
         try {
@@ -120,7 +115,8 @@ public class Batman {
     public boolean isExitCommand(String input) {
         try {
             return Parser.parse(input) instanceof ByeCommand;
-        } catch (Exception e) {
+        } catch (NoDescriptionException | NoDeadlineException |
+                NoFromToException| InvalidCommandException e) {
             return false;
         }
     }

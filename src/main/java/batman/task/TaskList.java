@@ -67,8 +67,7 @@ public class TaskList {
      * @return the task that was removed
      */
     public Task deleteTask(int index) {
-        Task removed = this.tasks.remove(index);
-        return removed;
+        return this.tasks.remove(index);
     }
 
     /**
