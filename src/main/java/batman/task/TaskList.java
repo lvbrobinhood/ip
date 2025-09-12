@@ -82,6 +82,7 @@ public class TaskList {
      * @return a new {@code TaskList} with tasks matching the keyword
      */
     public TaskList filterTasks(String keyword) {
+        // Usage of streams already present here
         assert keyword != null && !keyword.isEmpty();
         return new TaskList(this.tasks.stream()
                 .filter(task -> task.hasKeyword(keyword))
