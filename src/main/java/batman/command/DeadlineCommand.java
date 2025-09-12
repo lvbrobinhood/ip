@@ -30,6 +30,7 @@ public class DeadlineCommand extends AddTaskCommand {
     public DeadlineCommand(String description, String deadline) {
         this.description = description;
         this.deadline = deadline;
+        assert this.deadline.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 
     /**
