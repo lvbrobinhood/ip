@@ -56,3 +56,9 @@ shadowJar {
 run{
     standardInput = System.in
 }
+
+tasks.named('run', JavaExec) {
+    standardInput = System.in
+    enableAssertions = true
+}
+

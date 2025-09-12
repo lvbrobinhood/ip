@@ -36,6 +36,8 @@ public class EventCommand extends AddTaskCommand {
         this.description = description;
         this.from = from;
         this.to = to;
+        assert this.from.matches("\\d{4}-\\d{2}-\\d{2}");
+        assert this.to.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 
     /**
