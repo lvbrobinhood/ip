@@ -25,6 +25,8 @@ public class FormatDateCommand extends Command {
      */
     public FormatDateCommand(String format) {
         this.format = format.strip();
+        assert this.format.contains("M");
+        assert this.format.toLowerCase().contains("y");
         this.isSuccess = false;
     }
 
