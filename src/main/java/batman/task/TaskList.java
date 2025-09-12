@@ -30,6 +30,7 @@ public class TaskList {
      */
     public TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
+        assert this.tasks != null;
     }
 
     /**
@@ -39,6 +40,7 @@ public class TaskList {
      * @return the task at the given index
      */
     public Task getTask(int index) {
+        assert index >= 0 && index < this.tasks.size();
         return tasks.get(index);
     }
 
@@ -57,6 +59,7 @@ public class TaskList {
      * @param task the task to be added
      */
     public void addTask(Task task) {
+        assert task != null;
         this.tasks.add(task);
     }
 
@@ -67,6 +70,7 @@ public class TaskList {
      * @return the task that was removed
      */
     public Task deleteTask(int index) {
+        assert index >= 0 && index < this.tasks.size();
         Task removed = this.tasks.remove(index);
         return removed;
     }
@@ -80,6 +84,7 @@ public class TaskList {
      */
     public TaskList filterTasks(String keyword) {
         // Usage of streams already present here
+        assert keyword != null && !keyword.isEmpty();
         return new TaskList(this.tasks.stream()
                 .filter(task -> task.hasKeyword(keyword))
                 .collect(Collectors.toCollection(ArrayList::new)));

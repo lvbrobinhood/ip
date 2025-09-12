@@ -23,6 +23,7 @@ public class ListCommand extends Command {
     @Override
     public void execute(Storage storage, TaskList tasks) {
         this.tasks = tasks;
+        assert this.tasks != null;
     }
 
     /**
