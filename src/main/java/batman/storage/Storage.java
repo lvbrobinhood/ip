@@ -29,11 +29,11 @@ public class Storage {
     /** File name of the task storage file. */
     private final String fileName;
 
-    /** Mapping of task type identifiers to {@link CommandType}. */
-    private static final HashMap<String, CommandType> MAPPING = new HashMap<>(Map.of(
-            "T", CommandType.TODO,
-            "D", CommandType.DEADLINE,
-            "E", CommandType.EVENT
+    /** Mapping of task type identifiers to {@link TaskType}. */
+    private static final HashMap<String, TaskType> MAPPING = new HashMap<>(Map.of(
+            "T", TaskType.TODO,
+            "D", TaskType.DEADLINE,
+            "E", TaskType.EVENT
     ));
 
     /**
@@ -72,7 +72,7 @@ public class Storage {
             while (sc.hasNext()) {
                 String[] currRow = sc.nextLine().split(",");
                 currRow = Arrays.stream(currRow).map(String::strip).toArray(String[]::new);
-                CommandType currType = MAPPING.get(currRow[0]);
+                TaskType currType = MAPPING.get(currRow[0]);
 
                 switch (currType) {
                 case TODO:

@@ -45,19 +45,24 @@ public class Parser {
             throws NoDescriptionException, NoDeadlineException,
             NoFromToException, InvalidCommandException {
         String[] args = input.split(" ", 2);
-        String command = args[0];
+        CommandType currType;
+        try {
+            currType = CommandType.valueOf(args[0].strip().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidCommandException();
+        }
 
-        switch(command) {
-        case "bye":
+        switch(currType) {
+        case BYE:
             return new ByeCommand();
 
-        case "list":
+        case LIST:
             return new ListCommand();
 
-        case MARK_COMMAND, DELETE_COMMAND, UNMARK_COMMAND:
+        case MARK, DELETE, UNMARK:
             return checkValidIndex(args);
 
-        case "snooze":
+        case SNOOZE:
             if (args.length == 2 && (!args[1].isBlank()) && !args[1].strip().startsWith("/by")) {
                 String[] temp = args[1].strip().split(" /by ", 2);
                 if (temp.length != 2 || temp[1].isBlank()) {
@@ -71,35 +76,33 @@ public class Parser {
                     System.out.println("Error: Argument must be an integer");
                 }
             } else {
-                // handle case where no index present
                 throw new InvalidCommandException();
             }
             break;
 
-        case "formatdate":
+        case FORMATDATE:
             if (args.length == 2) {
                 return new FormatDateCommand(args[1]);
             }
             break;
 
-        case "find":
+        case FIND:
             if (args.length == 2) {
-                if (!args[1].isBlank()) {
-                    return new FindCommand(args[1]);
-                } else {
+                if (args[1].isBlank()) {
                     throw new InvalidCommandException();
                 }
+                return new FindCommand(args[1]);
             }
             break;
 
-        case "todo":
+        case TODO:
             if (args.length == 2 && (!args[1].isBlank())) {
                 return new ToDoCommand(args[1].strip());
             } else {
                 throw new NoDescriptionException();
             }
 
-        case "deadline":
+        case DEADLINE:
             if (args.length == 2 && (!args[1].isBlank()) && !args[1].strip().startsWith("/by")) {
                 String[] temp = args[1].strip().split(" /by ", 2);
                 if (temp.length != 2 || temp[1].isBlank()) {
@@ -110,7 +113,7 @@ public class Parser {
                 throw new NoDescriptionException();
             }
 
-        case "event":
+        case EVENT:
             if (!args[1].contains(" /from ") || !args[1].contains(" /to ")) {
                 throw new NoFromToException();
             } else {
