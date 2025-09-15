@@ -47,7 +47,7 @@ public class DeleteCommand extends Command {
      */
     @Override
     public void execute(Storage storage, TaskList tasks) {
-        if (this.index < tasks.getSize()) {
+        if (this.index < tasks.getSize() && this.index >= 0) {
             this.isSuccess = true;
             this.removed = tasks.deleteTask(index);
             this.size = tasks.getSize();

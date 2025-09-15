@@ -9,6 +9,7 @@ import batman.command.FindCommand;
 import batman.command.FormatDateCommand;
 import batman.command.ListCommand;
 import batman.command.MarkCommand;
+import batman.command.SnoozeCommand;
 import batman.command.ToDoCommand;
 import batman.command.UnmarkCommand;
 
@@ -55,6 +56,25 @@ public class Parser {
 
         case MARK_COMMAND, DELETE_COMMAND, UNMARK_COMMAND:
             return checkValidIndex(args);
+
+        case "snooze":
+            if (args.length == 2 && (!args[1].isBlank()) && !args[1].strip().startsWith("/by")) {
+                String[] temp = args[1].strip().split(" /by ", 2);
+                if (temp.length != 2 || temp[1].isBlank()) {
+                    throw new NoDeadlineException();
+                }
+
+                try {
+                    int index = Integer.parseInt(temp[0].strip());
+                    return new SnoozeCommand(index, temp[1].strip());
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Argument must be an integer");
+                }
+            } else {
+                // handle case where no index present
+                throw new InvalidCommandException();
+            }
+            break;
 
         case "formatdate":
             if (args.length == 2) {

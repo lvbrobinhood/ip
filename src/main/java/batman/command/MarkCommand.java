@@ -44,7 +44,7 @@ public class MarkCommand extends Command {
      */
     @Override
     public void execute(Storage storage, TaskList tasks) {
-        if (this.index < tasks.getSize()) {
+        if (this.index < tasks.getSize() && this.index >= 0) {
             this.task = tasks.getTask(index);
             this.task.setMarked();
             this.isSuccess = true;

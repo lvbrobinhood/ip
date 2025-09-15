@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Deadline extends TimedTask {
     /** The date by which the task must be completed. */
-    private final LocalDate deadline;
+    private LocalDate deadline;
 
     /** Formatter for displaying the deadline date, if specified. */
     private DateTimeFormatter formatter;
@@ -39,6 +39,10 @@ public class Deadline extends TimedTask {
      */
     public Deadline(boolean done, String description, String deadline) {
         super(done, description);
+        this.deadline = LocalDate.parse(deadline);
+    }
+
+    public void setDeadline(String deadline) {
         this.deadline = LocalDate.parse(deadline);
     }
 
