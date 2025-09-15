@@ -14,7 +14,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * Controller for the main GUI.
+ * Controller for the main GUI window of the Batman task manager application.
+ * <p>
+ * This class manages user interaction with the graphical interface, handling
+ * user input, displaying bot responses, and managing the application window.
+ * </p>
  */
 public class MainWindow extends AnchorPane {
     @FXML
@@ -32,19 +36,33 @@ public class MainWindow extends AnchorPane {
     private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/robin.jpg"));
     private final Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/batman.jpg"));
 
+    /**
+     * Initializes the main window, binding the scroll pane to the dialog container's height.
+     */
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Batman instance */
+    /**
+     * Injects the {@code Batman} instance and displays an initial welcome message from Batman.
+     *
+     * @param batman the Batman instance to be used for handling input
+     */
     public void setBatman(Batman batman) {
         this.batman = batman;
         dialogContainer.getChildren()
                 .add(DialogBox.getDukeDialog("Hello! I'm Batman.\n" + "What can I do for you?", dukeImage));
     }
 
-    /** Sets the stage and handles the window close button (X) */
+    /**
+     * Sets the stage for the application window and handles the window close button (X).
+     * <p>
+     * This method binds the close event to trigger the exit sequence rather than the default close behavior.
+     * </p>
+     *
+     * @param stage the stage representing the main window
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
 
@@ -58,8 +76,9 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Handles user input: adds user and bot dialog, clears input.
-     * If exit command is typed, triggers exit sequence.
+     * Handles user input from the text field.
+     * Adds both user and bot dialogs to the conversation, clears the input field,
+     * and checks if the exit command is typed to trigger the exit sequence.
      */
     @FXML
     private void handleUserInput() {
@@ -78,7 +97,8 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Handles the exit sequence: adds goodbye messages and closes the stage after a delay.
+     * Handles the exit sequence of the application.
+     * Adds a goodbye message and closes the stage after a short delay.
      */
     private void handleExitCommand() {
         String exitMessage = "bye"; // simulate user typing "bye"

@@ -42,6 +42,15 @@ public class Deadline extends TimedTask {
         this.deadline = LocalDate.parse(deadline);
     }
 
+    /**
+     * Sets the deadline for the task using the provided string.
+     * <p>
+     * This method parses the given deadline string into a {@code LocalDate} object
+     * and assigns it to the {@code deadline} field.
+     * </p>
+     *
+     * @param deadline a string representing the deadline in the format "yyyy-MM-dd"
+     */
     public void setDeadline(String deadline) {
         this.deadline = LocalDate.parse(deadline);
     }

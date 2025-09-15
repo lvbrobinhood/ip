@@ -2,21 +2,16 @@ package batman.core;
 
 import batman.command.ByeCommand;
 import batman.command.Command;
-
 import batman.exception.InvalidCommandException;
 import batman.exception.NoDeadlineException;
 import batman.exception.NoDescriptionException;
 import batman.exception.NoFromToException;
-
 import batman.storage.Storage;
-
 import batman.task.TaskList;
-
 import batman.ui.Parser;
 import batman.ui.Ui;
 
 import java.time.format.DateTimeParseException;
-
 import java.util.Scanner;
 
 /**
@@ -85,10 +80,22 @@ public class Batman {
         sc.close();
     }
 
+    /**
+     * Initializes the application by loading tasks from storage.
+     */
     public void initApp() {
         storage.load(tasks);
     }
 
+    /**
+     * Processes the given input command, executes it, and returns a response message.
+     * <p>
+     * If the command is a "bye" command, a farewell message is returned.
+     * </p>
+     *
+     * @param input the user input command to be processed
+     * @return the result message after executing the command
+     */
     public String processInput(String input) {
         try {
             Command currCommand = Parser.parse(input);
@@ -111,6 +118,12 @@ public class Batman {
         }
     }
 
+    /**
+     * Determines if the given input command is an exit command (i.e., {@code bye}).
+     *
+     * @param input the user input command
+     * @return true if the command is a "bye" command, false otherwise
+     */
     public boolean isExitCommand(String input) {
         try {
             return Parser.parse(input) instanceof ByeCommand;
@@ -118,7 +131,6 @@ public class Batman {
             return false;
         }
     }
-
 
     /**
      * The main entry point of the program.

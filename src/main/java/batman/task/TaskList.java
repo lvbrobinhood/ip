@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class TaskList {
     /** The list of tasks. */
     private final ArrayList<Task> tasks;
+    /** The formatter specified, if any. */
     private DateTimeFormatter formatter;
 
     /**
