@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class TaskList {
     /** The list of tasks. */
     private final ArrayList<Task> tasks;
+    private DateTimeFormatter formatter;
 
     /**
      * Creates an empty task list.
@@ -60,6 +61,12 @@ public class TaskList {
      */
     public void addTask(Task task) {
         assert task != null;
+
+        if (this.formatter != null && task instanceof TimedTask) {
+            TimedTask timedTask = (TimedTask) task;
+            timedTask.setFormatter(this.formatter);
+        }
+
         this.tasks.add(task);
     }
 
@@ -95,11 +102,11 @@ public class TaskList {
      * @param pattern the date format pattern to apply
      */
     public void changeDateFormat(String pattern) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern.strip());
+        this.formatter = DateTimeFormatter.ofPattern(pattern.strip());
         for (Task task: this.tasks) {
             if (task instanceof TimedTask) {
                 TimedTask timedTask = (TimedTask) task;
-                timedTask.setFormatter(formatter);
+                timedTask.setFormatter(this.formatter);
             }
         }
     }
