@@ -37,21 +37,29 @@ public class MainWindow extends AnchorPane {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Duke instance */
+    /** Injects the Batman instance */
     public void setBatman(Batman batman) {
         this.batman = batman;
         dialogContainer.getChildren()
                 .add(DialogBox.getDukeDialog("Hello! I'm Batman.\n" + "What can I do for you?", dukeImage));
-
     }
 
+    /** Sets the stage and handles the window close button (X) */
     public void setStage(Stage stage) {
         this.stage = stage;
+
+        // Handle window close request
+        this.stage.setOnCloseRequest(event -> {
+            // Prevent default close
+            event.consume();
+            // Trigger exit sequence as if user typed "bye"
+            handleExitCommand();
+        });
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
-     * the dialog container. Clears the user input after processing.
+     * Handles user input: adds user and bot dialog, clears input.
+     * If exit command is typed, triggers exit sequence.
      */
     @FXML
     private void handleUserInput() {
@@ -65,9 +73,24 @@ public class MainWindow extends AnchorPane {
         userInput.clear();
 
         if (batman.isExitCommand(input)) {
-            PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
-            delay.setOnFinished(e -> stage.close());
-            delay.play();
+            handleExitCommand();
         }
+    }
+
+    /**
+     * Handles the exit sequence: adds goodbye messages and closes the stage after a delay.
+     */
+    private void handleExitCommand() {
+        String exitMessage = "bye"; // simulate user typing "bye"
+        String response = batman.processInput(exitMessage);
+
+        dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(exitMessage, userImage),
+                DialogBox.getDukeDialog(response, dukeImage)
+        );
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
+        delay.setOnFinished(e -> stage.close());
+        delay.play();
     }
 }
