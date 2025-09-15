@@ -27,10 +27,6 @@ import batman.exception.NoFromToException;
  * </p>
  */
 public class Parser {
-    private final static String MARK_COMMAND = "mark";
-    private final static String UNMARK_COMMAND = "unmark";
-    private final static String DELETE_COMMAND = "delete";
-
     /**
      * Parses the given user input and returns the corresponding command.
      *
@@ -42,8 +38,7 @@ public class Parser {
      * @throws InvalidCommandException if a command is invalid (e.g., empty or invalid find command)
      */
     public static Command parse(String input)
-            throws NoDescriptionException, NoDeadlineException,
-            NoFromToException, InvalidCommandException {
+            throws NoDescriptionException, NoDeadlineException, NoFromToException, InvalidCommandException {
         String[] args = input.split(" ", 2);
         CommandType currType;
         try {
@@ -61,24 +56,6 @@ public class Parser {
 
         case MARK, DELETE, UNMARK:
             return checkValidIndex(args);
-
-        case SNOOZE:
-            if (args.length == 2 && (!args[1].isBlank()) && !args[1].strip().startsWith("/by")) {
-                String[] temp = args[1].strip().split(" /by ", 2);
-                if (temp.length != 2 || temp[1].isBlank()) {
-                    throw new NoDeadlineException();
-                }
-
-                try {
-                    int index = Integer.parseInt(temp[0].strip());
-                    return new SnoozeCommand(index, temp[1].strip());
-                } catch (NumberFormatException e) {
-                    System.out.println("Error: Argument must be an integer");
-                }
-            } else {
-                throw new InvalidCommandException();
-            }
-            break;
 
         case FORMATDATE:
             if (args.length == 2) {
@@ -102,50 +79,26 @@ public class Parser {
                 throw new NoDescriptionException();
             }
 
-        case DEADLINE:
-            if (args.length == 2 && (!args[1].isBlank()) && !args[1].strip().startsWith("/by")) {
-                String[] temp = args[1].strip().split(" /by ", 2);
-                if (temp.length != 2 || temp[1].isBlank()) {
-                    throw new NoDeadlineException();
-                }
-                return new DeadlineCommand(temp[0].strip(), temp[1].strip());
-            } else {
-                throw new NoDescriptionException();
-            }
+        case SNOOZE, DEADLINE:
+            return checkValidDeadlineSnooze(args);
 
         case EVENT:
-            if (!args[1].contains(" /from ") || !args[1].contains(" /to ")) {
-                throw new NoFromToException();
-            } else {
-                String[] temp1 = args[1].strip().split(" /from ", 2);
-                String[] temp2 = args[1].strip().split(" /to ", 2);
-                if (temp1[0].isBlank()) {
-                    throw new NoDescriptionException();
-                } else if (temp2.length != 2 || temp2[1].isBlank()) {
-                    throw new NoFromToException();
-                } else if (temp1[1].split(" /to ").length != 2 || temp1[1].split(" /to ")[0].isBlank()) {
-                    throw new NoFromToException();
-                }
-                String description = temp1[0];
-                String to = temp2[1];
-                String from = temp1[1].split(" /to ")[0];
-                return new EventCommand(description, from, to);
-            }
+            return checkValidEvent(args);
         }
         return null;
     }
 
     public static Command checkValidIndex(String[] args) {
-        String commandType = args[0];
+        CommandType currType = CommandType.valueOf(args[0].strip().toUpperCase());
         if (args.length == 2) {
             try {
                 int index = Integer.parseInt(args[1].strip()) - 1;
-                switch (commandType) {
-                case MARK_COMMAND:
+                switch (currType) {
+                case MARK:
                     return new MarkCommand(index);
-                case UNMARK_COMMAND:
+                case UNMARK:
                     return new UnmarkCommand(index);
-                case DELETE_COMMAND:
+                case DELETE:
                     return new DeleteCommand(index);
                 default:
                     return null;
@@ -155,5 +108,57 @@ public class Parser {
             }
         }
         return null;
+    }
+
+    public static Command checkValidDeadlineSnooze(String[] args)
+            throws NoDeadlineException, InvalidCommandException, NoDescriptionException {
+        CommandType currType = CommandType.valueOf(args[0].strip().toUpperCase());
+        if (args.length == 2 && (!args[1].isBlank()) && !args[1].strip().startsWith("/by")) {
+            String[] temp = args[1].strip().split(" /by ", 2);
+            if (temp.length != 2 || temp[1].isBlank()) {
+                throw new NoDeadlineException();
+            }
+
+            switch (currType) {
+            case DEADLINE:
+                return new DeadlineCommand(temp[0].strip(), temp[1].strip());
+            case SNOOZE:
+                try {
+                    int index = Integer.parseInt(temp[0].strip());
+                    return new SnoozeCommand(index, temp[1].strip());
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Argument must be an integer");
+                }
+            }
+
+        } else {
+            switch (currType) {
+            case SNOOZE:
+                throw new InvalidCommandException();
+            case DEADLINE:
+                throw new NoDescriptionException();
+            }
+        }
+        return null;
+    }
+
+    public static Command checkValidEvent(String[] args) throws NoFromToException, NoDescriptionException {
+        if (!args[1].contains(" /from ") || !args[1].contains(" /to ")) {
+            throw new NoFromToException();
+        } else {
+            String[] temp1 = args[1].strip().split(" /from ", 2);
+            String[] temp2 = args[1].strip().split(" /to ", 2);
+            if (temp1[0].isBlank()) {
+                throw new NoDescriptionException();
+            } else if (temp2.length != 2 || temp2[1].isBlank()) {
+                throw new NoFromToException();
+            } else if (temp1[1].split(" /to ").length != 2 || temp1[1].split(" /to ")[0].isBlank()) {
+                throw new NoFromToException();
+            }
+            String description = temp1[0];
+            String to = temp2[1];
+            String from = temp1[1].split(" /to ")[0];
+            return new EventCommand(description, from, to);
+        }
     }
 }

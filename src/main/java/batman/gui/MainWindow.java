@@ -29,8 +29,8 @@ public class MainWindow extends AnchorPane {
     private Batman batman;
     private Stage stage;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/robin.jpg"));
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/batman.jpg"));
+    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/robin.jpg"));
+    private final Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/batman.jpg"));
 
     @FXML
     public void initialize() {
@@ -58,8 +58,6 @@ public class MainWindow extends AnchorPane {
         String input = userInput.getText();
         String response = batman.processInput(input);
 
-        //dialog.appendText("You: " + input + "\n");
-        //dialog.appendText("Batman: " + response + "\n\n");
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getDukeDialog(response, dukeImage)
@@ -71,13 +69,5 @@ public class MainWindow extends AnchorPane {
             delay.setOnFinished(e -> stage.close());
             delay.play();
         }
-
-        /*String input = userInput.getText();
-        String response = batman.getResponse(input);
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, dukeImage)
-        );
-        userInput.clear();*/
     }
 }

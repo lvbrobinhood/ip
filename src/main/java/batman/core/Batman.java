@@ -104,8 +104,7 @@ public class Batman {
 
             return currCommand.toString();
 
-        } catch (NoDescriptionException | InvalidCommandException |
-                 NoDeadlineException | NoFromToException e) {
+        } catch (NoDescriptionException | InvalidCommandException | NoDeadlineException | NoFromToException e) {
             return e.getMessage();
         } catch (DateTimeParseException e) {
             return "Error: Please use yyyy-mm-dd format for time";
@@ -115,8 +114,7 @@ public class Batman {
     public boolean isExitCommand(String input) {
         try {
             return Parser.parse(input) instanceof ByeCommand;
-        } catch (NoDescriptionException | NoDeadlineException |
-                NoFromToException| InvalidCommandException e) {
+        } catch (NoDescriptionException | NoDeadlineException | NoFromToException | InvalidCommandException e) {
             return false;
         }
     }
