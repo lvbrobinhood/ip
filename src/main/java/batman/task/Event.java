@@ -103,6 +103,8 @@ public class Event extends TimedTask {
             return String.format("[%s]%s (from: %s to: %s)", this.getTaskType(), super.toString(),
                     this.from.format(this.formatter), this.to.format(this.formatter));
         }
-        return String.format("[%s]%s (from: %s to: %s)", this.getTaskType(), super.toString(), this.from, this.to);
+        DateTimeFormatter baseFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return String.format("[%s]%s (from: %s to: %s)", this.getTaskType(), super.toString(),
+                this.from.format(baseFormatter), this.to.format(baseFormatter));
     }
 }

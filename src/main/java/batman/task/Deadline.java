@@ -109,6 +109,8 @@ public class Deadline extends TimedTask {
             return String.format("[%s]%s (by: %s)", this.getTaskType(), super.toString(),
                     this.deadline.format(this.formatter));
         }
-        return String.format("[%s]%s (by: %s)", this.getTaskType(), super.toString(), this.deadline);
+        DateTimeFormatter baseFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return String.format("[%s]%s (by: %s)", this.getTaskType(), super.toString(),
+                this.deadline.format(baseFormatter));
     }
 }
